@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        /* 1. 전달받은 props 인자를 내부에서 구조분해할당을 이용해 사용하는 방법 */
+        // function PropsPrinter(props) {
+
+        //     // const dream = props.dream;
+        //     // const children = props.children;
+        //     const { dream, children } = props;
+
+        //     return (
+        //         <>
+        //             <h1>제 꿈은 {dream}입니다.</h1>
+        //             <h3>그 꿈을 이루기 위해서 {children}하고 있습니다!</h3>
+        //         </>
+        //     );
+        // }
+
+        /* 2. 매개변수에서 구조분해할당을 이용해 사용하는 방법 */
+        function PropsPrinter({ dream, children }) {
+            return (
+                <>
+                    <h1>제 꿈은 {dream}입니다.</h1>
+                    <h3>그 꿈을 이루기 위해서 {children}하고 있습니다!</h3>
+                </>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(
+            <PropsPrinter dream="개발자">공부</PropsPrinter>
+        );
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+
+    <!--
+        컴포넌트 합성
+        컴포넌트는 자신의 출력에 따른 컴포넌트를 참조할 수 있다.
+        컴포넌트는 재사용 가능한 크기로 작게 유지해야 하며, 순수 함수처럼 작성되어야 한다.
+    -->
+    <div id="root"></div>
+
+    <script type="text/babel">
+
+        const menu = "찜닭";
+        const price = 24000;
+        const store = "금계찜닭";
+        const storeTel = "02-123-4567";
+
+        const lunch = { menu, price, store, storeTel };
+
+        function MenuCard() {
+            return <h1>{lunch.menu}</h1>;
+        }
+
+        function PriceCard() {
+            return <h2 style={{color:'red'}}>{lunch.price}</h2>;
+        }
+
+        function StoreCard() {
+            return <h3 style={{color:'green'}}>{lunch.store}</h3>;
+        }
+
+        function StoreTelCard() {
+            return <h3 style={{backgroundColor:'green'}}>{lunch.storeTel}</h3>;
+        }
+
+        function LunchInfo() {
+            return (
+                <div style={{width:300, border:'1px solid pink'}}>
+                    <MenuCard/>
+                    <PriceCard/>
+                    <StoreCard/>
+                    <StoreTelCard/>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<LunchInfo/>);
+
+    </script>
+</body>
+</html>

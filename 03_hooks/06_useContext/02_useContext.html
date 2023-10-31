@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Document</title>
+    <script crossorigin src='https://unpkg.com/react@18/umd/react.development.js'></script>
+    <script crossorigin src='https://unpkg.com/react-dom@18/umd/react-dom.development.js'></script>
+    <script crossorigin src='https://unpkg.com/@babel/standalone/babel.min.js'></script>
+    <style>
+        .page {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+        }
+
+        .footer {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <div id='root'></div>
+    <script type='text/babel'>
+
+        /*
+            context는 React 컴포넌트 트리 안에서 전역적으로 데이터를 공유할 수 있도록 고안된 방법이다.
+            트리 구조가 복잡해질수록 하위 컴포넌트로 props를 전달하기 위해 drilling이 발생할 수 있고,
+            그러면 유지보수가 매우 힘들어지고 코드를 읽기도 힘들어지게 된다. 
+            하지만 context를 사용하면 중간 컴포넌트들에게 props를 넘겨주지 않아도 되고,
+            유지보수도 훨씬 수월해지게 된다. 
+
+            단, context를 사용하면 컴포넌트를 재사용하기 어려워지기 때문에 꼭 필요할 때만 써야 한다. 
+            따라서 때에 따라서는 context보다 props drilling이 더 간단한 해결책일 수 있다.
+        */
+
+        const {useState, useContext, createContext} = React;
+
+        /*
+            context 객체를 createContext를 통해 만들고 defaultValue가 없는 경우에는 null로 설정할 수 있다.
+            context 객체를 구독하고 있는 컴포넌트를 렌더링 할 때 React는 트리 상위에서 가장 가까이 있는 Provider로부터 현재 값을 읽어들인다.
+            이 때 적절한 provider를 찾지 못할 때 쓰이는 값이 defaultValue이다.
+        */
+        const DarkModeContext = createContext(null);
+        const UserContext = createContext(null);
+
+        function Header() {
+            const context = useContext(DarkModeContext);
+            const { isDark } = context;
+
+            return (
+                <header
+                    className="header"
+                    style={
+                        {
+                            backgroundColor: isDark? 'black' : 'lightgray',
+                            color: isDark? 'white' : 'black'
+                        }
+                    }
+                >
+                    <h1>Welcome to React World😊</h1>
+                </header>
+            );
+        }
+
+        function Content() {
+            const context = useContext(DarkModeContext);
+            const { isDark } = context;
+
+            const userContext = useContext(UserContext);
+            const { username } = userContext;
+
+            return (
+                <div
+                    className="content"
+                    style={
+                        {
+                            backgroundColor: isDark? 'gray' : 'white',
+                            color: isDark? 'white' : 'black'
+                        }
+                    }
+                >
+                    <p>{username}입니다. React 너무 재미있어요~🤩</p>
+                </div>
+            );
+        }
+
+        function Footer() {
+            const context = useContext(DarkModeContext);
+            console.log(context);
+            const { isDark, setIsDark } = context;
+
+            const toggleHandler = () => { setIsDark(!isDark) };
+
+            return (
+                <footer
+                    className="footer"
+                    style={
+                        {
+                            backgroundColor: isDark? "black" : "lightgray",
+                            color: isDark? "white" : "black"
+                        }
+                    }
+                >
+                        <button onClick={toggleHandler}>{isDark? 'LightMode' : 'DarkMode'}</button>
+                        Copyright 2023. team-ohgiraffers. all rights reserved.
+                </footer>
+            );
+        }
+
+        function Page() {
+            return (
+                <div className="page">
+                    <Header/>
+                    <Content/>
+                    <Footer/>
+                </div>
+            );
+        }
+
+        function App() {
+            const [isDark, setIsDark] = useState(false);
+            const [username, setUsername] = useState('홍길동');
+
+            /*
+                Provider는 value prop을 이용하여 하위 컴포넌트에게 값을 전달한다. 
+                이때 값을 전달받을 수 있는 컴포넌트 수에는 제한이 없다. 
+                해당 Provider는의 Context 이름으로부터 useContext hooks를 활용하여 어느 컴포넌트든 필요한 순간 가져다 쓸 수 있게 한다.
+            */
+
+            return (
+                <UserContext.Provider value={{username}}>
+                    <DarkModeContext.Provider value={{isDark, setIsDark}}>
+                        <Page/>
+                    </DarkModeContext.Provider>
+                </UserContext.Provider>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+    </script>
+</body>
